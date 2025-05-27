@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <title>ระบบเลือกวิชาเพิ่มเติม</title>
+  <style>
+    body {
+      font-family: 'Kanit', sans-serif;
+      background-color: #f2f2f2;
+      padding: 30px;
+    }
+    .container {
+      max-width: 600px;
+      margin: auto;
+      background: white;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.2);
+      text-align: center;
+    }
+    .logo {
+      display: block;
+      margin: 0 auto 20px auto;
+      max-width: 120px;
+      height: auto;
+    }
+    .logo-large {
+      display: block;
+      margin: 30px auto 20px auto;
+      max-width: 200px;
+      height: auto;
+    }
+    h1 {
+      color: #333;
+      margin-bottom: 30px;
+    }
+    label {
+      display: block;
+      margin-top: 17px;
+      font-weight: bold;
+      text-align: left;
+    }
+    select, input[type="text"], button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border-radius:7px;
+      border: 2px solid #ccc;
+      font-size: 17px;
+      box-sizing: border-box;
+    }
+    button {
+      background-color: #007BFF;
+      color: white;
+      margin-top:17px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- ใส่โลโก้โรงเรียนตรงนี้ -->
+    <img src="https://tse1.mm.bing.net/th?id=OIP.98l0n-zzL2MMnswxfJGtTAHaHa&pid=Api&P=0&h=220" alt="โลโก้โรงเรียน" class="logo" />
+    
+    <h1>ระบบเลือกวิชาเพิ่มเติม</h1>
+
+    <form id="form">
+      <label for="grade">ระดับชั้น:</label>
+      <select id="grade">
+        <option value="">-- เลือกระดับชั้น --</option>
+        <option value="ม.1">ม.1</option>
+        <option value="ม.2">ม.2</option>
+        <option value="ม.3">ม.3</option>
+        <option value="ม.4">ม.4</option>
+        <option value="ม.5">ม.5</option>
+        <option value="ม.6">ม.6</option>
+      </select>
+
+      <label for="room">ห้อง:</label>
+      <select id="room" disabled>
+        <option value="">-- เลือกห้อง --</option>
+      </select>
+
+      <label for="studentInput">ชื่อนักเรียน:</label>
+      <input type="text" id="studentInput" placeholder="กรอกชื่อนักเรียน" disabled />
+
+      <label for="subject">เลือกวิชาเพิ่มเติม:</label>
+      <select id="subject" disabled>
+        <option value="">-- เลือกเพิ่มเติม --</option>
+        <option value="คณิตเพิ่มเติม">คณิตเพิ่มเติม</option>
+        <option value="วิทยาศาสตร์เพิ่มเติม">วิทยาศาสตร์เพิ่มเติม</option>
+        <option value="คอมพิวเตอร์">คอมพิวเตอร์</option>
+        <option value="ศิลปะ">ศิลปะ</option>
+        <option value="ดนตรี">ดนตรี</option>
+        <option value="ภาษาเกาหลี">ภาษาเกาหลี</option>
+        <option value="คอม">คอม</option>
+      </select>
+
+      <button type="submit">ส่งคำตอบ</button>
+    </form>
+  </div>
+
+  <script>
+    const gradeSelect = document.getElementById('grade');
+    const roomSelect = document.getElementById('room');
+    const studentInput = document.getElementById('studentInput');
+    const subjectSelect = document.getElementById('subject');
+
+    gradeSelect.addEventListener('change', () => {
+      const grade = gradeSelect.value;
+      roomSelect.innerHTML = '<option value="">-- เลือกห้อง --</option>';
+      studentInput.value = '';
+      studentInput.disabled = true;
+      subjectSelect.value = '';
+      subjectSelect.disabled = true;
+
+      if (grade) {
+        roomSelect.disabled = false;
+        for (let i = 1; i <= 15; i++) {
+          const opt = document.createElement('option');
+          opt.value = i.toString();
+          opt.text = i.toString();
+          roomSelect.appendChild(opt);
+        }
+      } else {
+        roomSelect.disabled = true;
+      }
+    });
+
+    roomSelect.addEventListener('change', () => {
+      const grade = gradeSelect.value;
+      const room = roomSelect.value;
+      studentInput.value = '';
+      subjectSelect.value = '';
+      subjectSelect.disabled = true;
+
+      if (grade && room) {
+        studentInput.disabled = false;
+      } else {
+        studentInput.disabled = true;
+      }
+    });
+
+    studentInput.addEventListener('input', () => {
+      if (studentInput.value.trim() !== '') {
+        subjectSelect.disabled = false;
+      } else {
+        subjectSelect.value = '';
+        subjectSelect.disabled = true;
+      }
+    });
+
+    document.getElementById('form').addEventListener('submit', e => {
+      e.preventDefault();
+
+      const grade = gradeSelect.value;
+      const room = roomSelect.value;
+      const student = studentInput.value.trim();
+      const subject = subjectSelect.value;
+
+      if (!grade) return alert('กรุณาเลือกระดับชั้น');
+      if (!room) return alert('กรุณาเลือกห้อง');
+      if (!student) return alert('กรุณากรอกชื่อนักเรียน');
+      if (!subject) return alert('กรุณาเลือกวิชาเพิ่มเติม');
+
+      const container = document.querySelector('.container');
+      container.innerHTML = `
+        <img src="https://tse1.mm.bing.net/th?id=OIP.98l0n-zzL2MMnswxfJGtTAHaHa&pid=Api&P=0&h=220" alt="โลโก้โรงเรียน" class="logo-large" />
+        <h2 style="color: green; text-align: center; margin-top: 20px;">คุณส่งคำตอบแล้ว</h2>
+      `;
+    });
+  </script>
+</body>
+</html>
